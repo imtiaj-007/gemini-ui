@@ -2,9 +2,10 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/auth";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
 import Sidebar from "@/components/core/sidebar";
+import { SidebarProvider } from "@/context/sidebar-context";
+import { useAuthStore } from "@/store/auth";
+import Header from "@/components/core/header";
 
 
 export default function MainLayout({
@@ -30,16 +31,16 @@ export default function MainLayout({
     }
 
     return (
-        <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-            <Sidebar />
-            <main className="flex-1 flex flex-col">
-                <header className="flex justify-end p-4">
-                    <ThemeToggle />
-                </header>
-                <div className="flex-1 p-4 overflow-y-auto">
-                    {children}
-                </div>
-            </main>
-        </div>
+        <SidebarProvider>
+            <div className="flex h-screen bg-radial from-white via-blue-50 to-blue-100 dark:from-blue-950 dark:via-gray-900 dark:to-gray-950">
+                <Sidebar />
+                <main className="flex-1 flex flex-col">
+                    <Header />
+                    <div className="flex-1 overflow-hidden">
+                        {children}
+                    </div>
+                </main>
+            </div>
+        </SidebarProvider>
     );
 }

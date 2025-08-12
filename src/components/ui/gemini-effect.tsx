@@ -28,11 +28,15 @@ export const AutoScrollEffect = ({
 
     React.useEffect(() => {
         const animateSequentially = async () => {
-            [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.2, 0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.3, 0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.4, 0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.5, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59, 0.6, 0.61, 0.62, 0.63, 0.64, 0.65, 0.66, 0.67, 0.68, 0.69, 0.7, 0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77, 0.78, 0.79, 0.8, 0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.9, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99, 1.0].forEach((value, index) => {
+            const steps = [];
+            for (let i = 0; i <= 200; i++) {
+                steps.push(i * 0.005);
+            }
+            steps.forEach((value, index) => {
                 setTimeout(() => {
                     setProgress(new MotionValue(value));
-                }, 50 * index);
-            })
+                }, 25 * index);
+            });
         };
         animateSequentially();
 
@@ -79,16 +83,16 @@ export const GoogleGeminiEffect = ({
     };
 
     return (
-        <div className={cn("sticky top-80", className)}>
-            <p className="text-lg md:text-7xl font-normal pb-4 text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-100 to-neutral-300">
+        <div className={cn("sticky top-20", className)}>
+            <p className="text-lg md:text-7xl font-normal pb-4 text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-900 to-neutral-700 dark:from-neutral-100 dark:to-neutral-300">
                 {title || `Build with Pixel Pilot`}
             </p>
-            <p className="text-xs md:text-xl font-normal text-center text-neutral-400 mt-4 max-w-lg mx-auto">
+            <p className="text-xs md:text-xl font-normal text-center text-neutral-600 dark:text-neutral-400 mt-4 max-w-lg mx-auto">
                 {description || `Scroll this component and see the bottom SVG come to life wow this works!`}
             </p>
             {children}
-            <div className="w-full h-[890px] -top-60 md:-top-40  flex items-center justify-center bg-red-transparent absolute ">
-                <button className="font-bold bg-white rounded-full md:px-4 md:py-2 px-2 py-1 md:mt-24 mt-8 z-30 md:text-base text-black text-xs  w-fit mx-auto ">
+            <div className="w-full h-[900px] -top-60 md:-top-40 flex items-center justify-center bg-red-transparent absolute">
+                <button className="font-bold bg-neutral-800 dark:bg-white rounded-full md:px-4 md:py-2 px-2 py-1 md:mt-24 mt-8 z-30 md:text-base text-white dark:text-black text-xs w-fit mx-auto transition-colors duration-300">
                     pixel-pilot-ai
                 </button>
             </div>
