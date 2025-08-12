@@ -71,7 +71,7 @@ export default function ChatWindow({ chatroomId, homeInput }: { chatroomId: stri
             addMessage(chatroomId, aiResponse);
             setMessages(prev => [...prev, aiResponse]);
             setIsTyping(false);
-        }, 2000 + Math.random() * 1000);
+        }, 3000 + Math.random() * 1000);
     };
 
     return (

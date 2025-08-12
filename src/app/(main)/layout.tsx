@@ -32,7 +32,7 @@ export default function MainLayout({
 
     return (
         <SidebarProvider>
-            <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+            <div className="flex h-screen bg-radial from-white via-blue-50 to-blue-100 dark:from-blue-950 dark:via-gray-900 dark:to-gray-950">
                 <Sidebar />
                 <main className="flex-1 flex flex-col">
                     <Header />

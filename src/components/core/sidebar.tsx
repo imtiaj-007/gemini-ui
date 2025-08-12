@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { useForm } from "react-hook-form"
 import {
     PlusCircle,
     MessageSquare,
@@ -21,6 +22,21 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription
+} from '@/components/ui/dialog';
+import {
+    Form,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormControl,
+    FormMessage
+} from '@/components/ui/form';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useSidebar } from '@/context/sidebar-context';
 import { Chatroom, useChatStore } from '@/store/chat';
@@ -39,16 +55,16 @@ export default function Sidebar() {
     } = useChatStore();
     const { logout } = useAuthStore();
     const { isOpen, toggleSidebar } = useSidebar();
-    const [searchTerm, setSearchTerm] = useState('');    
+    const [searchTerm, setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
     const filteredChatrooms = chatrooms.filter(room =>
         room.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
     );
 
-    const handleRenameChatRoom = (id: string, newTitle: string) => {
+    const handleRenameChatroom = (id: string, newTitle: string) => {
         renameChatroom(id, newTitle);
-        toast.info("Chatroom renamed from ")
+        toast.info(`Chatroom renamed to ${newTitle}`);
     }
 
     const handleDeleteChatroom = (id: string, title: string) => {
@@ -69,7 +85,7 @@ export default function Sidebar() {
                             setActiveChatroomId={setActiveChatroomId}
                             searchTerm={searchTerm}
                             setSearchTerm={setSearchTerm}
-                            handleRenameChatroom={handleRenameChatRoom}
+                            handleRenameChatroom={handleRenameChatroom}
                             handleDeleteChatroom={handleDeleteChatroom}
                             logout={logout}
                         />
@@ -83,7 +99,7 @@ export default function Sidebar() {
                     setActiveChatroomId={setActiveChatroomId}
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
-                    handleRenameChatroom={handleRenameChatRoom}
+                    handleRenameChatroom={handleRenameChatroom}
                     handleDeleteChatroom={handleDeleteChatroom}
                     logout={logout}
                 />
@@ -98,7 +114,7 @@ function SidebarContent({
     setActiveChatroomId,
     searchTerm,
     setSearchTerm,
-    handleRenameChatRoom,
+    handleRenameChatroom,
     handleDeleteChatroom,
     logout
 }: {
@@ -112,7 +128,7 @@ function SidebarContent({
     logout: () => void
 }) {
     const { closeSidebar } = useSidebar();
-    const [renameInput, setRenameInput] = useState('');
+    const [renameDialogRoom, setRenameDialogRoom] = useState<Chatroom | null>(null);
 
     return (
         <>
@@ -167,7 +183,14 @@ function SidebarContent({
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align='start' side='right'>
                                 <DropdownMenuItem><Share2 /> Share</DropdownMenuItem>
-                                <DropdownMenuItem><Pencil /> Rename</DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setRenameDialogRoom(room);
+                                    }}
+                                >
+                                    <Pencil /> Rename
+                                </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem><Inbox /> Archive</DropdownMenuItem>
                                 <DropdownMenuItem
@@ -187,6 +210,86 @@ function SidebarContent({
             <Button variant="outline" onClick={logout} className="mt-4">
                 <LogOut className="mr-2 h-4 w-4" /> Logout
             </Button>
+
+            {renameDialogRoom &&
+                <RenameDialog
+                    open={renameDialogRoom !== null}
+                    onOpenChange={() => setRenameDialogRoom(null)}
+                    data={renameDialogRoom}
+                    onRename={handleRenameChatroom}
+                />
+            }
         </>
     );
+}
+
+interface RenameDialogProps {
+    open: boolean
+    onOpenChange: (open: boolean) => void
+    data: Chatroom;
+    onRename: (id: string, newName: string) => void
+    title?: string
+    description?: string
+}
+
+export function RenameDialog({
+    open,
+    onOpenChange,
+    data,
+    onRename,
+    title = "Rename Chatroom",
+    description = "Enter a new name",
+}: RenameDialogProps) {
+    const form = useForm({
+        defaultValues: {
+            name: data.title,
+        },
+    })
+
+    const handleSubmit = form.handleSubmit((value) => {
+        onRename(data.id, value.name);
+        onOpenChange(false)
+    })
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>{title}</DialogTitle>
+                    <DialogDescription>{description}</DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            rules={{
+                                required: "Name is required",
+                                validate: (value) => value.trim().length > 0 || "Name cannot be empty",
+                            }}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Enter name" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <div className="flex justify-end gap-2">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => onOpenChange(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button type="submit">Rename</Button>
+                        </div>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    )
 }

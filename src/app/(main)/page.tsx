@@ -21,6 +21,9 @@ export default function DashboardPage() {
     const handleCreateChatroom = () => {
         const newTitle = `chatroom-${chatrooms.length + 1}`;
         createChatroom(newTitle);
+        setTimeout(()=> {
+            setInputValue('');
+        }, 2000);
     };
 
     useEffect(() => {
