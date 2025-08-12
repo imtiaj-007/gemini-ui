@@ -8,10 +8,10 @@ This project is a fully functional, responsive, and visually appealing frontend 
 
 | Preview | Description |
 |---------|-------------|
-| ![Login Form](/login-form.png) | Login form interface |
-| ![OTP Form](/otp-form.png) | OTP verification interface |
-| ![Dashboard](/page-ui.png) | Main dashboard interface |
-| ![Chat UI](/chat-ui.png) | Chat conversation interface |
+| ![Login Form](./public/login-form.png) | Login form interface |
+| ![OTP Form](./public/otp-form.png) | OTP verification interface |
+| ![Dashboard](./public/page-ui.png) | Main dashboard interface |
+| ![Chat UI](./public/chat-ui.png) | Chat conversation interface |
 
 ## 🚀 Project Overview
 
